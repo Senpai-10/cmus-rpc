@@ -1,9 +1,9 @@
-MAIN_SRC=cmus-rpc.py
+MAIN_SRC=cmus-rpc
 EXE_NAME=cmus-rpc
 INSTALL_PATH=~/.local/bin
 
 run:
-	python3 ${MAIN_SRC} --debug
+	./${MAIN_SRC} --debug
 
 install: 
 	@echo "1. copying main script"

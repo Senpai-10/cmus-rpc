@@ -1,4 +1,4 @@
-#! /bin/env python3
+#! /usr/bin/python3
 
 import time
 import subprocess
@@ -121,7 +121,10 @@ def main():
 
             if remote:
                 parser.parse(remote)
-                if query.get("status") == "stopped" or query.get("status") == "paused": continue
+                if query.get("status") == "stopped" or query.get("status") == "paused": 
+                    rpc.clear()
+                    continue
+
                 top = format(top_text, query)
                 bottom = format(bottom_text, query)
                 
