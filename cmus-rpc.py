@@ -2,6 +2,7 @@
 
 import time
 import subprocess
+import argparse
 
 from pypresence import Presence
 from time import sleep
@@ -88,29 +89,50 @@ def format(string: str, query: dict):
             
 
 def main():
+    args_parser = argparse.ArgumentParser(description='cmus rpc.')
+    args_parser.add_argument('--debug', action='store_true',
+                             help='print debug messages')
+    args = args_parser.parse_args()
+    
+    DEBUG = args.debug
+    
+    
     top_text = "{title}"
     bottom_text = "{artist} ({time_left})"
-    start = int(time.time())
-    rpc = Presence(CLIENT_ID)
-    rpc.connect()
     
+    # Loop to retry if connection to rpc failed
     while True:
-        remote = get_remote()
-        parser = Parser()
-        query = parser.query
-
-        if remote:
-            parser.parse(remote)
-            if query.get("status") == "stopped" or query.get("status") == "paused": continue
-            top = format(top_text, query)
-            bottom = format(bottom_text, query)
-            
-            rpc.update(state = bottom, details=top, large_image="icon",
-                       start=start)
-                    
-        sleep(1)
+        start = int(time.time())
+        rpc = Presence(CLIENT_ID)
+        try:
+            rpc.connect()
+        except Exception:
+            print(f"[{time.ctime()}] Failed to connect to rpc!")
+            sleep(3)
+            continue
         
-    rpc.close()
+        print(f"[{time.ctime()}] Rpc connected!")
+        
+        # Rpc update loop
+        while True:
+            remote = get_remote()
+            parser = Parser()
+            query = parser.query
+
+            if remote:
+                parser.parse(remote)
+                if query.get("status") == "stopped" or query.get("status") == "paused": continue
+                top = format(top_text, query)
+                bottom = format(bottom_text, query)
+                
+                rpc.update(state=bottom, details=top, large_image="icon",
+                        start=start)
+                
+                if DEBUG:
+                    print(f"[{time.ctime()}] rpc update: \n\n{top}\n{bottom}\n")
+                        
+            sleep(1)
+            
         
 if __name__ == '__main__':
     main()
