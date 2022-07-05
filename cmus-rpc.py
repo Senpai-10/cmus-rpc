@@ -111,8 +111,6 @@ def main():
         sleep(1)
         
     rpc.close()
-    
-            
         
 if __name__ == '__main__':
     main()
