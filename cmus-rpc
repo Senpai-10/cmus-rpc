@@ -95,22 +95,13 @@ def format(string: str, query: dict):
     
     return new_string
             
-
-def main():
-    args_parser = argparse.ArgumentParser(description='cmus rpc.')
-    args_parser.add_argument('--debug', action='store_true',
-                             help='print debug messages')
-    args = args_parser.parse_args()
-    
-    DEBUG: bool = args.debug
-
+def app(rpc, DEBUG):
     top_text = "{title}"
     bottom_text = "{artist} ({time_left})"
     
     # Loop to retry if connection to rpc failed
     while True:
         # start = int(time.time())
-        rpc = Presence(CLIENT_ID)
         try:
             rpc.connect()
         except Exception:
@@ -140,8 +131,26 @@ def main():
                 
                 if DEBUG:
                     print(f"[{time.ctime()}] rpc update: \n\n{top}\n{bottom}\n")
-                        
+            else:
+                # clear rpc when cmus is not running
+                rpc.clear()
+
             sleep(1)
+
+def main():
+    args_parser = argparse.ArgumentParser(description='cmus rpc.')
+    args_parser.add_argument('--debug', action='store_true',
+                             help='print debug messages')
+    args = args_parser.parse_args()
+    
+    DEBUG: bool = args.debug
+    rpc = Presence(CLIENT_ID)
+
+    try:
+        app(rpc, DEBUG)
+    finally:
+        print(f"[{time.ctime()}] Clearing rpc!")
+        rpc.clear()
             
 if __name__ == '__main__':
     main()
