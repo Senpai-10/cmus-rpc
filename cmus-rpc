@@ -57,7 +57,15 @@ class Parser:
             
             if self.query.get("duration") and self.query.get("position"): 
                 timeleft = int(self.query["duration"]) - int(self.query["position"])
-                self.query["time_left"] = time.strftime('%H:%M:%S', time.gmtime(timeleft))
+                format = "%S"
+                
+                if timeleft >= 60:
+                    format = "%M:%S"
+
+                if timeleft >= 3600:
+                    format = "%H:%M:%S"
+                
+                self.query["time_left"] = time.strftime(f'-{format}', time.gmtime(timeleft))
             
             if line.startswith("tag artist"): self.query["artist"] = line.replace("tag artist ", "")
             if line.startswith("tag album"): self.query["album"] = line.replace("tag album ", "")
@@ -94,15 +102,14 @@ def main():
                              help='print debug messages')
     args = args_parser.parse_args()
     
-    DEBUG = args.debug
-    
-    
+    DEBUG: bool = args.debug
+
     top_text = "{title}"
     bottom_text = "{artist} ({time_left})"
     
     # Loop to retry if connection to rpc failed
     while True:
-        start = int(time.time())
+        # start = int(time.time())
         rpc = Presence(CLIENT_ID)
         try:
             rpc.connect()
@@ -125,11 +132,10 @@ def main():
                     rpc.clear()
                     continue
 
-                top = format(top_text, query)
-                bottom = format(bottom_text, query)
+                top = format(top_text, query) or "Empty!"
+                bottom = format(bottom_text, query) or "Empty!"
                 
-                rpc.update(state=bottom, details=top, large_image="icon",
-                        start=start)
+                rpc.update(state=bottom, details=top, large_image="icon")
                 
                 if DEBUG:
                     print(f"[{time.ctime()}] rpc update: \n\n{top}\n{bottom}\n")
