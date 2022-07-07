@@ -125,10 +125,11 @@ def main():
             remote = get_remote()
             parser = Parser()
             query = parser.query
+            status = query.get("status")
 
             if remote:
                 parser.parse(remote)
-                if query.get("status") == "stopped" or query.get("status") == "paused": 
+                if status == "stopped" or status == "paused": 
                     rpc.clear()
                     continue
 
