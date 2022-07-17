@@ -1,0 +1,3 @@
+move to rust
+new cmus-rpc
+    add notfiy for "Now playing!\n SONG_NAME - SONG_AUTHOR"
