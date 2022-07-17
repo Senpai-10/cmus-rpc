@@ -29,7 +29,6 @@ fn main() {
         }
 
         if cmus.title != current_song {
-            // send notifications here!
             if args.no_notification {
                 continue;
             }
