@@ -34,7 +34,9 @@ fn main() {
 
         if cmus.remote.is_empty() { 
             println!("cmus is not running!");
-            rpc.clear_activity().expect("Failed to clear activity");
+            if !args.debug {
+                rpc.clear_activity().expect("Failed to clear activity");
+            }
             thread::sleep(Duration::from_secs(3));
             continue; 
         }
@@ -55,18 +57,22 @@ fn main() {
     
             current_song = cmus.title.to_string();
     
-            println!("{} - {}", cmus.title, cmus.artist);
-    
-            rpc
-                .set_activity(|activity| {
-                    activity
-                        .details(format!("{}", cmus.title))
-                        .state(format!("{} (-{})", cmus.artist, cmus.time_left))
-                        .assets(|asset| asset.large_image("icon"))
-                })
-                .expect("Failed to set activity");
+            println!("{} - {} (-{})", cmus.title, cmus.artist, cmus.time_left);
+            
+            if !args.debug {    
+                rpc
+                    .set_activity(|activity| {
+                        activity
+                            .details(format!("{}", cmus.title))
+                            .state(format!("{} (-{})", cmus.artist, cmus.time_left))
+                            .assets(|asset| asset.large_image("icon"))
+                    })
+                    .expect("Failed to set activity");
+            }
         } else {
-            rpc.clear_activity().expect("Failed to clear activity");
+            if !args.debug {    
+                rpc.clear_activity().expect("Failed to clear activity");
+            }
         }
 
         thread::sleep(Duration::from_secs(1));
