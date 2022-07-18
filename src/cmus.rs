@@ -98,7 +98,18 @@ impl CmusQuery {
             let minutes = (tmp_timeleft / 60) % 60;
             let hours = (tmp_timeleft / 60) / 60;
 
-            time_left = Some(String::from(format!("{hours}:{minutes}:{seconds}")));
+            let mut format = String::new();
+
+            if hours != 0 {
+                format.push_str(&format!("{}:", pad(hours)));
+            }
+            if minutes != 0 {
+                format.push_str(&format!("{}:", pad(minutes)));
+            }
+
+            format.push_str(&format!("{}", pad(seconds)));
+
+            time_left = Some(format);
         }
 
         Self {
@@ -128,4 +139,12 @@ impl CmusQuery {
             vol_right: vol_right.unwrap_or_default()
         }
     }
+}
+
+fn pad(number: u64) -> String {
+    if number < 10 && number != 0 {
+        return format!("0{number}")
+    }
+
+    return number.to_string();
 }
