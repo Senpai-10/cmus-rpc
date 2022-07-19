@@ -23,7 +23,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
     let mut current_song = String::new();
-    let mut rpc = Client::new(718109162923360327);
+    let mut rpc = Client::new(999057193057919036);
 
     if !args.debug {
         rpc.start();
@@ -65,7 +65,7 @@ fn main() {
                         activity
                             .details(format!("{}", cmus.title))
                             .state(format!("{} (-{})", cmus.artist, cmus.time_left))
-                            .assets(|asset| asset.large_image("icon"))
+                            .assets(|asset| asset.large_image("logo"))
                     })
                     .expect("Failed to set activity");
             }
