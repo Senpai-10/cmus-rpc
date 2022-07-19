@@ -8,7 +8,7 @@ use notify_rust::Notification;
 use clap::Parser; 
 use std::{thread, time::Duration};
 
-/// Cmus rpc
+/// Discord Rich Presence integration for the C* Music Player
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
@@ -18,12 +18,19 @@ struct Args {
 
     #[clap(short, long, value_parser)]
     pub debug: bool,
+
+    /// discord rpc client id
+    #[clap(short, long, value_parser, default_value = "999057193057919036")]
+    pub client_id: u64,
+
+    #[clap(short = 'l', long, value_parser, default_value = "icon")]
+    pub client_large_image: String
 }
 
 fn main() {
     let args = Args::parse();
     let mut current_song = String::new();
-    let mut rpc = Client::new(999057193057919036);
+    let mut rpc = Client::new(args.client_id);
 
     if !args.debug {
         rpc.start();
@@ -65,7 +72,7 @@ fn main() {
                         activity
                             .details(format!("{}", cmus.title))
                             .state(format!("{} (-{})", cmus.artist, cmus.time_left))
-                            .assets(|asset| asset.large_image("logo"))
+                            .assets(|asset| asset.large_image(args.client_large_image.as_str()))
                     })
                     .expect("Failed to set activity");
             }
