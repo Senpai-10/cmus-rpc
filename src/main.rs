@@ -59,12 +59,12 @@ fn main() {
                     })
                     .expect("Failed to set activity");
             }
-        } else {
-            if !args.debug {    
+        } else { 
+            if !args.debug {
                 rpc.clear_activity().expect("Failed to clear activity");
             }
         }
-
-        // thread::sleep(Duration::from_secs(1));
+        
+        thread::sleep(Duration::from_millis(args.interval));
     }
 }
