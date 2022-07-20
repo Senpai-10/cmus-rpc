@@ -1,31 +1,14 @@
 mod shell;
 mod cmus;
+mod args;
 
 extern crate discord_rpc_client;
 
+use clap::Parser; 
 use discord_rpc_client::Client;
 use notify_rust::Notification;
-use clap::Parser; 
 use std::{thread, time::Duration};
-
-/// Discord Rich Presence integration for the C* Music Player
-#[derive(Parser, Debug)]
-#[clap(author, version, about, long_about = None)]
-struct Args {
-    /// Don't send notifications when playing new songs
-    #[clap(short = 'n', long, value_parser)]
-    pub no_notification: bool,
-
-    #[clap(short, long, value_parser)]
-    pub debug: bool,
-
-    /// discord rpc client id
-    #[clap(short, long, value_parser, default_value = "999057193057919036")]
-    pub client_id: u64,
-
-    #[clap(short = 'l', long, value_parser, default_value = "icon")]
-    pub client_large_image: String
-}
+use args::Args;
 
 fn main() {
     let args = Args::parse();
@@ -51,7 +34,7 @@ fn main() {
         if cmus.status == "playing" {
             if cmus.title != current_song {
 
-                if !args.no_notification {
+                if !args.no_notifications {
                     Notification::new()
                         .summary("Now playing!")
                         .body(&format!("{} - {}", cmus.title, cmus.artist))
