@@ -69,8 +69,6 @@
 
 #### **Build from source**
 
-<br/>
-
 ##### 1. git clone
 
 ```bash
