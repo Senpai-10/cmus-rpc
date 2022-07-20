@@ -1,3 +1,8 @@
-move to rust
-new cmus-rpc
-    add notfiy for "Now playing!\n SONG_NAME - SONG_AUTHOR"
+change notifications format to `artist - title`
+
+add position, duration formatted
+Example:
+    formatted_position: 01:02
+    formatted_duration: 03:43
+
+add Format Specifiers
