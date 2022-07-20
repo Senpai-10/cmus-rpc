@@ -92,24 +92,7 @@ impl CmusQuery {
         }
 
         if duration.is_some() && position.is_some() {
-            let tmp_timeleft = duration.unwrap() - position.unwrap();
-            
-            let seconds = tmp_timeleft % 60;
-            let minutes = (tmp_timeleft / 60) % 60;
-            let hours = (tmp_timeleft / 60) / 60;
-
-            let mut format = String::new();
-
-            if hours != 0 {
-                format.push_str(&format!("{}:", pad(hours)));
-            }
-            if minutes != 0 {
-                format.push_str(&format!("{}:", pad(minutes)));
-            }
-
-            format.push_str(&format!("{}", pad(seconds)));
-
-            time_left = Some(format);
+            time_left = Some(format_time(duration.unwrap() - position.unwrap()));
         }
 
         Self {
@@ -147,4 +130,23 @@ fn pad(number: u64) -> String {
     }
 
     return number.to_string();
+}
+
+fn format_time(time: u64) -> String {
+    let seconds = time % 60;
+    let minutes = (time / 60) % 60;
+    let hours = (time / 60) / 60;
+
+    let mut format = String::new();
+
+    if hours != 0 {
+        format.push_str(&format!("{}:", pad(hours)));
+    }
+    if minutes != 0 {
+        format.push_str(&format!("{}:", pad(minutes)));
+    }
+
+    format.push_str(&format!("{}", pad(seconds)));
+
+    return format
 }
