@@ -7,6 +7,8 @@ pub struct CmusQuery {
     pub file: String,
     pub duration: u64,
     pub position: u64,
+    pub formatted_duration: String,
+    pub formatted_position: String,
     pub time_left: String,
     pub artist: String,
     pub album: String,
@@ -36,6 +38,8 @@ impl CmusQuery {
         let mut file: Option<String> = None;
         let mut duration: Option<u64> = None;
         let mut position: Option<u64> = None;
+        let mut formatted_duration: Option<String> = None;
+        let mut formatted_position: Option<String> = None;
         let mut time_left: Option<String> = None;
         let mut artist: Option<String> = None;
         let mut album: Option<String> = None;
@@ -92,7 +96,10 @@ impl CmusQuery {
         }
 
         if duration.is_some() && position.is_some() {
-            time_left = Some(format_time(duration.unwrap() - position.unwrap()));
+            formatted_duration = Some(format_time(duration.unwrap(), false));
+            formatted_position = Some(format_time(position.unwrap(), false));
+
+            time_left = Some(format_time(duration.unwrap() - position.unwrap(), true));
         }
 
         Self {
@@ -102,6 +109,8 @@ impl CmusQuery {
             file: file.unwrap_or_default(),
             duration: duration.unwrap_or_default(),
             position: position.unwrap_or_default(),
+            formatted_duration: formatted_duration.unwrap_or_default(),
+            formatted_position: formatted_position.unwrap_or_default(),
             time_left: time_left.unwrap_or_default(),
             artist: artist.unwrap_or_default(),
             album: album.unwrap_or_default(),
@@ -132,21 +141,27 @@ fn pad(number: u64) -> String {
     return number.to_string();
 }
 
-fn format_time(time: u64) -> String {
+fn format_time(time: u64, clean: bool) -> String {
     let seconds = time % 60;
     let minutes = (time / 60) % 60;
     let hours = (time / 60) / 60;
 
     let mut format = String::new();
 
-    if hours != 0 {
-        format.push_str(&format!("{}:", pad(hours)));
-    }
-    if minutes != 0 {
-        format.push_str(&format!("{}:", pad(minutes)));
+    if clean {
+        if hours != 0 {
+            format.push_str(&format!("{}:", pad(hours)));
+        }
+        if minutes != 0 {
+            format.push_str(&format!("{}:", pad(minutes)));
+        }
+    
+        format.push_str(&format!("{}", pad(seconds)));
+    
+        return format
     }
 
-    format.push_str(&format!("{}", pad(seconds)));
+    format = format!("{}:{}:{}", pad(hours), pad(minutes), pad(seconds));
 
     return format
 }
