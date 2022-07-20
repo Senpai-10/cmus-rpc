@@ -68,30 +68,8 @@
 
 #### **Build from source**
 
-##### 1. git clone
-
 ```bash
-git clone https://github.com/Senpai-10/cmus-rpc
-```
-
-##### 1-2 cd the cloned repository
-
-```bash
-cd cmus-rpc
-```
-
-##### 2. install
-
-```bash
-cargo install --path .
-```
-
-##### uninstall
-
-`note: cd to cmus-rpc first`
-
-```bash
-cargo uninstall --path .
+cargo install --git https://github.com/Senpai-10/cmus-rpc
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
