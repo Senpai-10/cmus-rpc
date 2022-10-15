@@ -23,7 +23,7 @@ pub struct CmusQuery {
     pub replaygain_preamp: f64,
     pub repeat: bool,
     pub repeat_current: bool,
-    pub shuffle: bool,
+    pub shuffle: String,
     pub softvol: bool,
     pub vol_left: u8,
     pub vol_right: u8
@@ -54,7 +54,7 @@ impl CmusQuery {
         let mut replaygain_preamp: Option<f64> = None;
         let mut repeat: Option<bool> = None;
         let mut repeat_current: Option<bool> = None;
-        let mut shuffle: Option<bool> = None;
+        let mut shuffle: Option<String> = None;
         let mut softvol: Option<bool> = None;
         let mut vol_left: Option<u8> = None;
         let mut vol_right: Option<u8> = None;
