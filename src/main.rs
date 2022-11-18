@@ -1,14 +1,14 @@
-mod shell;
-mod parser;
-mod args;
 mod app;
+mod args;
+mod parser;
+mod shell;
 
 extern crate discord_rpc_client;
 
 use app::app;
-use clap::Parser; 
-use discord_rpc_client::Client;
 use args::Args;
+use clap::Parser;
+use discord_rpc_client::Client;
 
 fn main() {
     let args = Args::parse();

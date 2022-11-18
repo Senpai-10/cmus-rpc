@@ -1,4 +1,4 @@
-use clap::Parser; 
+use clap::Parser;
 
 /// Discord Rich Presence integration for the C* Music Player
 #[derive(Parser, Debug)]
@@ -21,5 +21,5 @@ pub struct Args {
     pub client_id: u64,
 
     #[clap(short = 'l', long, value_parser, default_value = "icon")]
-    pub client_large_image: String
+    pub client_large_image: String,
 }

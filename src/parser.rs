@@ -26,7 +26,7 @@ pub struct CmusQuery {
     pub shuffle: String,
     pub softvol: bool,
     pub vol_left: u8,
-    pub vol_right: u8
+    pub vol_right: u8,
 }
 
 impl CmusQuery {
@@ -60,7 +60,7 @@ impl CmusQuery {
         let mut vol_right: Option<u8> = None;
 
         for line in remote.lines() {
-            if line.starts_with("status ") { 
+            if line.starts_with("status ") {
                 let status_string = line.replace("status ", "");
 
                 status_symbol = match status_string.as_str() {
@@ -72,27 +72,68 @@ impl CmusQuery {
 
                 status = Some(status_string)
             }
-            if line.starts_with("file ") { file = Some(line.replace("file ", "")) }
-            if line.starts_with("duration ") { duration = Some(line.replace("duration ", "").parse().unwrap()) }
-            if line.starts_with("position ") { position = Some(line.replace("position ", "").parse().unwrap()) }
-        
-            if line.starts_with("tag artist ") { artist = Some(line.replace("tag artist ", "")) }
-            if line.starts_with("tag album ") { album = Some(line.replace("tag album ", "")) }
-            if line.starts_with("tag title ") { title = Some(line.replace("tag title ", "")) }
-            if line.starts_with("tag date ") { date = Some(line.replace("tag date ", "")) }
-            if line.starts_with("set aaa_mode ") { aaa_mode = Some(line.replace("set aaa_mode ", "")) }
-            if line.starts_with("set continue_ ") { continue_ = Some(line.replace("set continue_ ", "").parse().unwrap()) }
-            if line.starts_with("set play_library ") { play_library = Some(line.replace("set play_library ", "").parse().unwrap()) }
-            if line.starts_with("set play_sorted ") { play_sorted = Some(line.replace("set play_sorted ", "").parse().unwrap()) }
-            if line.starts_with("set replaygain ") { replaygain = Some(line.replace("set replaygain ", "")) }
-            if line.starts_with("set replaygain_limit ") { replaygain_limit = Some(line.replace("set replaygain_limit ", "").parse().unwrap()) }
-            if line.starts_with("set replaygain_preamp ") { replaygain_preamp = Some(line.replace("set replaygain_preamp ", "").parse().unwrap()) }
-            if line.starts_with("set repeat ") { repeat = Some(line.replace("set repeat ", "").parse().unwrap()) }
-            if line.starts_with("set repeat_current ") { repeat_current = Some(line.replace("set repeat_current ", "").parse().unwrap()) }
-            if line.starts_with("set shuffle ") { shuffle = Some(line.replace("set shuffle ", "").parse().unwrap()) }
-            if line.starts_with("set softvol ") { softvol = Some(line.replace("set softvol ", "").parse().unwrap()) }
-            if line.starts_with("set vol_left ") { vol_left = Some(line.replace("set vol_left ", "").parse().unwrap()) }
-            if line.starts_with("set vol_right ") { vol_right = Some(line.replace("set vol_right ", "").parse().unwrap()) }
+            if line.starts_with("file ") {
+                file = Some(line.replace("file ", ""))
+            }
+            if line.starts_with("duration ") {
+                duration = Some(line.replace("duration ", "").parse().unwrap())
+            }
+            if line.starts_with("position ") {
+                position = Some(line.replace("position ", "").parse().unwrap())
+            }
+
+            if line.starts_with("tag artist ") {
+                artist = Some(line.replace("tag artist ", ""))
+            }
+            if line.starts_with("tag album ") {
+                album = Some(line.replace("tag album ", ""))
+            }
+            if line.starts_with("tag title ") {
+                title = Some(line.replace("tag title ", ""))
+            }
+            if line.starts_with("tag date ") {
+                date = Some(line.replace("tag date ", ""))
+            }
+            if line.starts_with("set aaa_mode ") {
+                aaa_mode = Some(line.replace("set aaa_mode ", ""))
+            }
+            if line.starts_with("set continue_ ") {
+                continue_ = Some(line.replace("set continue_ ", "").parse().unwrap())
+            }
+            if line.starts_with("set play_library ") {
+                play_library = Some(line.replace("set play_library ", "").parse().unwrap())
+            }
+            if line.starts_with("set play_sorted ") {
+                play_sorted = Some(line.replace("set play_sorted ", "").parse().unwrap())
+            }
+            if line.starts_with("set replaygain ") {
+                replaygain = Some(line.replace("set replaygain ", ""))
+            }
+            if line.starts_with("set replaygain_limit ") {
+                replaygain_limit = Some(line.replace("set replaygain_limit ", "").parse().unwrap())
+            }
+            if line.starts_with("set replaygain_preamp ") {
+                replaygain_preamp =
+                    Some(line.replace("set replaygain_preamp ", "").parse().unwrap())
+            }
+            if line.starts_with("set repeat ") {
+                repeat = Some(line.replace("set repeat ", "").parse().unwrap())
+            }
+            if line.starts_with("set repeat_current ") {
+                repeat_current = Some(line.replace("set repeat_current ", "").parse().unwrap())
+            }
+            if line.starts_with("set shuffle ") {
+                shuffle = Some(line.replace("set shuffle ", "").parse().unwrap())
+            }
+            if line.starts_with("set softvol ") {
+                softvol = Some(line.replace("set softvol ", "").parse().unwrap())
+            }
+            if line.starts_with("set vol_left ") {
+                vol_left = Some(line.replace("set vol_left ", "").parse().unwrap())
+            }
+            if line.starts_with("set vol_right ") {
+                vol_right = Some(line.replace("set vol_right ", "").parse().unwrap())
+            }
         }
 
         if duration.is_some() && position.is_some() {
@@ -128,14 +169,14 @@ impl CmusQuery {
             shuffle: shuffle.unwrap_or_default(),
             softvol: softvol.unwrap_or_default(),
             vol_left: vol_left.unwrap_or_default(),
-            vol_right: vol_right.unwrap_or_default()
+            vol_right: vol_right.unwrap_or_default(),
         }
     }
 }
 
 fn pad(number: u64) -> String {
     if number < 10 && number != 0 {
-        return format!("0{number}")
+        return format!("0{number}");
     }
 
     return number.to_string();
@@ -155,13 +196,13 @@ fn format_time(time: u64, clean: bool) -> String {
         if minutes != 0 {
             format.push_str(&format!("{}:", pad(minutes)));
         }
-    
+
         format.push_str(&format!("{}", pad(seconds)));
-    
-        return format
+
+        return format;
     }
 
     format = format!("{}:{}:{}", pad(hours), pad(minutes), pad(seconds));
 
-    return format
+    return format;
 }
