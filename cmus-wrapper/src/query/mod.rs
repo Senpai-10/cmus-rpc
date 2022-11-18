@@ -31,11 +31,11 @@ pub enum Query {
     VolRight,
 }
 
-pub type StatusMap = HashMap<Query, String>;
+pub type QueryMap = HashMap<Query, String>;
 
 /// query status
 /// return: false if cmus is not running.
-pub fn query(status: &mut StatusMap) -> bool {
+pub fn load(status: &mut QueryMap) -> bool {
     let remote = match shell::get_stdout("cmus-remote", "-Q") {
         Some(v) => v,
         None => return false,

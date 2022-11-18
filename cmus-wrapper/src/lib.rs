@@ -1,3 +1,3 @@
 mod shell;
 
-pub mod status;
+pub mod query;
