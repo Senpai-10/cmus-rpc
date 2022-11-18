@@ -53,6 +53,16 @@
 
 <!-- GETTING STARTED -->
 
+### **Preview**
+
+#### discord rpc
+
+![rpc-preview](./.readme/rpc-preview.png)
+
+#### notification
+
+![notification](./.readme/notification.png)
+
 ### **Prerequisites**
 
 -   build from source: [rust](https://www.rust-lang.org/tools/install)
