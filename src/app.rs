@@ -19,53 +19,53 @@ pub fn app(args: Args, mut rpc: Client) -> () {
             continue;
         }
 
-        match query_map.get(&Query::Status) {
-            Some(song_status) => {
-                if song_status == "playing" {
-                    let title: String = query_map
-                        .get(&Query::Title)
-                        .unwrap_or(&String::new())
-                        .to_owned();
-                    let artist: String = query_map
-                        .get(&Query::Artist)
-                        .unwrap_or(&String::new())
-                        .to_owned();
-                    let time_left: String = query_map
-                        .get(&Query::TimeLeft)
-                        .unwrap_or(&String::new())
-                        .to_owned();
+        let song_status: String = query_map
+            .get(&Query::Status)
+            .unwrap_or(&String::new())
+            .to_owned();
 
-                    if title != current_song {
-                        if !args.no_notifications {
-                            Notification::new()
-                                .summary("Now playing!")
-                                .body(&format!("{} - {}", title, artist))
-                                .urgency(notify_rust::Urgency::Low)
-                                .show()
-                                .expect("Failed to send notification");
-                        }
-                    }
+        if song_status == "playing" {
+            let title: String = query_map
+                .get(&Query::Title)
+                .unwrap_or(&String::new())
+                .to_owned();
+            let artist: String = query_map
+                .get(&Query::Artist)
+                .unwrap_or(&String::new())
+                .to_owned();
+            let time_left: String = query_map
+                .get(&Query::TimeLeft)
+                .unwrap_or(&String::new())
+                .to_owned();
 
-                    current_song = title.clone();
-
-                    println!("{} - {} (-{})", title, artist, time_left);
-
-                    if !args.debug {
-                        rpc.set_activity(|activity| {
-                            activity
-                                .details(format!("{}", title))
-                                .state(format!("{} (-{})", artist, time_left))
-                                .assets(|asset| asset.large_image(args.client_large_image.as_str()))
-                        })
-                        .expect("Failed to set activity");
-                    }
-                } else {
-                    if !args.debug {
-                        rpc.clear_activity().expect("Failed to clear activity");
-                    }
+            if title != current_song {
+                if !args.no_notifications {
+                    Notification::new()
+                        .summary("Now playing!")
+                        .body(&format!("{} - {}", title, artist))
+                        .urgency(notify_rust::Urgency::Low)
+                        .show()
+                        .expect("Failed to send notification");
                 }
             }
-            None => {}
+
+            current_song = title.clone();
+
+            println!("{} - {} (-{})", title, artist, time_left);
+
+            if !args.debug {
+                rpc.set_activity(|activity| {
+                    activity
+                        .details(format!("{}", title))
+                        .state(format!("{} (-{})", artist, time_left))
+                        .assets(|asset| asset.large_image(args.client_large_image.as_str()))
+                })
+                .expect("Failed to set activity");
+            }
+        } else {
+            if !args.debug {
+                rpc.clear_activity().expect("Failed to clear activity");
+            }
         }
 
         thread::sleep(Duration::from_millis(args.interval));
