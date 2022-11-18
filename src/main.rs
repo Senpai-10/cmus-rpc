@@ -1,9 +1,5 @@
 mod app;
 mod args;
-mod parser;
-mod shell;
-
-extern crate discord_rpc_client;
 
 use app::app;
 use args::Args;
