@@ -22,9 +22,18 @@ pub fn app(args: Args, mut rpc: Client) -> () {
         match query_map.get(&Query::Status) {
             Some(song_status) => {
                 if song_status == "playing" {
-                    let title: String = query_map.get(&Query::Title).unwrap_or(&String::new()).to_owned();
-                    let artist: String = query_map.get(&Query::Artist).unwrap_or(&String::new()).to_owned();
-                    let time_left: String = query_map.get(&Query::TimeLeft).unwrap_or(&String::new()).to_owned();
+                    let title: String = query_map
+                        .get(&Query::Title)
+                        .unwrap_or(&String::new())
+                        .to_owned();
+                    let artist: String = query_map
+                        .get(&Query::Artist)
+                        .unwrap_or(&String::new())
+                        .to_owned();
+                    let time_left: String = query_map
+                        .get(&Query::TimeLeft)
+                        .unwrap_or(&String::new())
+                        .to_owned();
 
                     if title != current_song {
                         if !args.no_notifications {
@@ -50,13 +59,13 @@ pub fn app(args: Args, mut rpc: Client) -> () {
                         })
                         .expect("Failed to set activity");
                     }
+                } else {
+                    if !args.debug {
+                        rpc.clear_activity().expect("Failed to clear activity");
+                    }
                 }
             }
-            None => {
-                if !args.debug {
-                    rpc.clear_activity().expect("Failed to clear activity");
-                }
-            }
+            None => {}
         }
 
         thread::sleep(Duration::from_millis(args.interval));
