@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/Senpai-10/cmus-rpc">
-    <img src="images/logo.png" alt="Logo" width="320" height="320">
+    <img src=".readme/logo.png" alt="Logo" width="320" height="320">
   </a>
 
   <h3 align="center">cmus-rpc</h3>
