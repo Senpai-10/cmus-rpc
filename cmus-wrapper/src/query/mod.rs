@@ -33,8 +33,19 @@ pub enum Query {
 
 pub type QueryMap = HashMap<Query, String>;
 
-/// query status
-/// return: false if cmus is not running.
+/// Query song status (return: false if cmus is not running)
+///
+/// How to use:
+/// ```rust
+/// let mut query_map: query::QueryMap = HashMap::new();
+///
+/// query::load(&mut query_map);
+///
+/// let song_status: String = query_map
+///     .get(&Query::Status)
+///     .unwrap_or(&String::new())
+///     .to_owned();
+/// ```
 pub fn load(status: &mut QueryMap) -> bool {
     let remote = match shell::get_stdout("cmus-remote", "-Q") {
         Some(v) => v,
