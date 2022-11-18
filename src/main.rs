@@ -1,12 +1,9 @@
 mod app;
 mod args;
-mod parser;
 
-// use app::app;
+use app::app;
 use args::Args;
 use clap::Parser;
-use cmus_wrapper as cw;
-use cw::status::Status;
 use discord_rpc_client::Client;
 
 fn main() {
@@ -17,15 +14,5 @@ fn main() {
         rpc.start();
     }
 
-    let mut status = Status::new();
-
-    let q = status.query();
-
-    if q == false {
-        println!("cmus is not running!");
-    } else {
-        println!("{:?}", status.get(cw::status::Query::Status));
-        println!("{:?}", status.get(cw::status::Query::StatusSymbol));
-    }
-    // app(args, rpc);
+    app(args, rpc);
 }
