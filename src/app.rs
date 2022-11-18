@@ -27,7 +27,6 @@ pub fn app(args: Args, mut rpc: Client) -> () {
             .to_owned();
 
         if song_status == "playing" {
-            let file: &String = query_map.get(&Query::File).unwrap();
             let title: String = query_map
                 .get(&Query::Title)
                 .unwrap_or(&String::from("Unknown title"))
@@ -41,10 +40,12 @@ pub fn app(args: Args, mut rpc: Client) -> () {
                 .unwrap_or(&String::new())
                 .to_owned();
 
-            let song_cover = get_song_cover(file);
-
             if title != current_song {
                 if !args.no_notifications {
+                    let file: &String = query_map.get(&Query::File).unwrap();
+
+                    let song_cover = get_song_cover(file);
+
                     let mut notify = Notification::new();
                     notify.summary("Now playing!");
                     notify.body(&format!("{} - {}", title, artist));
