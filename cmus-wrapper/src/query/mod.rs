@@ -61,58 +61,47 @@ pub fn load(status: &mut QueryMap) -> bool {
         }
 
         if line.starts_with("duration ") {
-            status
-                .insert(Query::Duration, line.replace("duration ", ""));
+            status.insert(Query::Duration, line.replace("duration ", ""));
         }
 
         if line.starts_with("position ") {
-            status
-                .insert(Query::Position, line.replace("position ", ""));
+            status.insert(Query::Position, line.replace("position ", ""));
         }
 
         if line.starts_with("tag artist ") {
-            status
-                .insert(Query::Artist, line.replace("tag artist ", ""));
+            status.insert(Query::Artist, line.replace("tag artist ", ""));
         }
 
         if line.starts_with("tag album ") {
-            status
-                .insert(Query::Album, line.replace("tag album ", ""));
+            status.insert(Query::Album, line.replace("tag album ", ""));
         }
 
         if line.starts_with("tag title ") {
-            status
-                .insert(Query::Title, line.replace("tag title ", ""));
+            status.insert(Query::Title, line.replace("tag title ", ""));
         }
 
         if line.starts_with("tag date ") {
-            status
-                .insert(Query::Date, line.replace("tag date ", ""));
+            status.insert(Query::Date, line.replace("tag date ", ""));
         }
 
         if line.starts_with("set aaa_mode ") {
-            status
-                .insert(Query::AaaMode, line.replace("set aaa_mode ", ""));
+            status.insert(Query::AaaMode, line.replace("set aaa_mode ", ""));
         }
 
         if line.starts_with("set continue_ ") {
-            status
-                .insert(Query::Continue_, line.replace("set continue_ ", ""));
+            status.insert(Query::Continue_, line.replace("set continue_ ", ""));
         }
 
         if line.starts_with("set play_library ") {
-            status
-                .insert(Query::PlayLibrary, line.replace("set play_library ", ""));
+            status.insert(Query::PlayLibrary, line.replace("set play_library ", ""));
         }
 
         if line.starts_with("set play_sorted ") {
-            status
-                .insert(Query::PlaySorted, line.replace("set play_sorted ", ""));
+            status.insert(Query::PlaySorted, line.replace("set play_sorted ", ""));
         }
 
         if line.starts_with("set replaygain ") {
-            status
-                .insert(Query::Replaygain, line.replace("set replaygain ", ""));
+            status.insert(Query::Replaygain, line.replace("set replaygain ", ""));
         }
 
         if line.starts_with("set replaygain_limit ") {
@@ -130,8 +119,7 @@ pub fn load(status: &mut QueryMap) -> bool {
         }
 
         if line.starts_with("set repeat ") {
-            status
-                .insert(Query::Repeat, line.replace("set repeat ", ""));
+            status.insert(Query::Repeat, line.replace("set repeat ", ""));
         }
 
         if line.starts_with("set repeat_current ") {
@@ -142,37 +130,35 @@ pub fn load(status: &mut QueryMap) -> bool {
         }
 
         if line.starts_with("set shuffle ") {
-            status
-                .insert(Query::Shuffle, line.replace("set shuffle ", ""));
+            status.insert(Query::Shuffle, line.replace("set shuffle ", ""));
         }
 
         if line.starts_with("set softvol ") {
-            status
-                .insert(Query::Softvol, line.replace("set softvol ", ""));
+            status.insert(Query::Softvol, line.replace("set softvol ", ""));
         }
 
         if line.starts_with("set vol_left ") {
-            status
-                .insert(Query::VolLeft, line.replace("set vol_left ", ""));
+            status.insert(Query::VolLeft, line.replace("set vol_left ", ""));
         }
 
         if line.starts_with("set vol_right ") {
-            status
-                .insert(Query::VolRight, line.replace("set vol_right ", ""));
+            status.insert(Query::VolRight, line.replace("set vol_right ", ""));
         }
     }
 
-    if status.get(&Query::Duration).is_some() && status.get(&Query::Position).is_some() {
-        let duration: u64 = status.get(&Query::Duration).unwrap().parse().unwrap();
-        let position: u64 = status.get(&Query::Position).unwrap().parse().unwrap();
+    {
+        let duration = status.get(&Query::Duration);
+        let position = status.get(&Query::Position);
 
-        status
-            .insert(Query::FormattedDuration, format_time(duration, true));
-        status
-            .insert(Query::FormattedPosition, format_time(position, true));
+        if duration.is_some() && position.is_some() {
+            let duration: u64 = duration.unwrap().parse().unwrap();
+            let position: u64 = position.unwrap().parse().unwrap();
 
-        status
-            .insert(Query::TimeLeft, format_time(duration - position, true));
+            status.insert(Query::FormattedDuration, format_time(duration, true));
+            status.insert(Query::FormattedPosition, format_time(position, true));
+
+            status.insert(Query::TimeLeft, format_time(duration - position, true));
+        }
     }
 
     true
