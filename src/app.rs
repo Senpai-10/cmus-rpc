@@ -27,11 +27,11 @@ pub fn app(args: Args, mut rpc: Client) -> () {
         if song_status == "playing" {
             let title: String = query_map
                 .get(&Query::Title)
-                .unwrap_or(&String::new())
+                .unwrap_or(&String::from("Unknown title"))
                 .to_owned();
             let artist: String = query_map
                 .get(&Query::Artist)
-                .unwrap_or(&String::new())
+                .unwrap_or(&String::from("Unknown artist"))
                 .to_owned();
             let time_left: String = query_map
                 .get(&Query::TimeLeft)
