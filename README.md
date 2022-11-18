@@ -64,6 +64,8 @@
 
 ![notification](./.readme/notification.png)
 
+> **Note**: You can add images to your songs using `easytag`
+
 ### **Prerequisites**
 
 -   build from source: [rust](https://www.rust-lang.org/tools/install)
