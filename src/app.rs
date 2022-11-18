@@ -3,6 +3,8 @@ use cmus_wrapper::query;
 use discord_rpc_client::Client;
 use notify_rust::Notification;
 use query::Query;
+use std::path;
+use std::process::Command;
 use std::{collections::HashMap, thread, time::Duration};
 
 pub fn app(args: Args, mut rpc: Client) -> () {
@@ -25,6 +27,7 @@ pub fn app(args: Args, mut rpc: Client) -> () {
             .to_owned();
 
         if song_status == "playing" {
+            let file: &String = query_map.get(&Query::File).unwrap();
             let title: String = query_map
                 .get(&Query::Title)
                 .unwrap_or(&String::from("Unknown title"))
@@ -38,14 +41,19 @@ pub fn app(args: Args, mut rpc: Client) -> () {
                 .unwrap_or(&String::new())
                 .to_owned();
 
+            let song_cover = get_song_cover(file);
+
             if title != current_song {
                 if !args.no_notifications {
-                    Notification::new()
-                        .summary("Now playing!")
-                        .body(&format!("{} - {}", title, artist))
-                        .urgency(notify_rust::Urgency::Low)
-                        .show()
-                        .expect("Failed to send notification");
+                    let mut notify = Notification::new();
+                    notify.summary("Now playing!");
+                    notify.body(&format!("{} - {}", title, artist));
+                    notify.urgency(notify_rust::Urgency::Low);
+                    if let Some(cover_path) = song_cover {
+                        notify.icon(&cover_path);
+                    }
+
+                    notify.show().expect("Failed to send notification");
                 }
             }
 
@@ -70,4 +78,44 @@ pub fn app(args: Args, mut rpc: Client) -> () {
 
         thread::sleep(Duration::from_millis(args.interval));
     }
+}
+
+pub fn get_song_cover(file_path: &String) -> Option<String> {
+    let file = path::Path::new(file_path);
+
+    let file_name = file.file_name().unwrap();
+    let tmp_song_name = path::Path::new(file_name)
+        .file_stem()
+        .unwrap()
+        .to_str()
+        .unwrap();
+
+    let song_cover = tmp_song_name.replace(" ", "_");
+    let song_cover_file = format!("{}.png", song_cover);
+    let tmp_dir = path::Path::new("/tmp/cmus_rpc_song_cover_cache");
+
+    let song_cover_file_path = tmp_dir.join(path::Path::new(&song_cover_file));
+
+    if !tmp_dir.exists() {
+        std::fs::create_dir(tmp_dir).expect("Failed to create tmp_dir");
+    }
+
+    if !song_cover_file_path.exists() {
+        let mut cmd = Command::new("sh");
+        cmd.arg("-c");
+
+        cmd.arg(format!(
+            "ffmpeg -i '{}' -y -an -c:v copy '/tmp/cmus_rpc_song_cover_cache/tmp.png' -vf scale='-1:200' '{}'",
+            file.to_str().unwrap(),
+            song_cover_file_path.to_str().unwrap()
+        ));
+
+        let output = cmd.output().expect("Failed to run ffmpeg");
+
+        if !output.status.success() {
+            return None;
+        }
+    }
+
+    Some(song_cover_file_path.to_str().unwrap().to_owned())
 }
