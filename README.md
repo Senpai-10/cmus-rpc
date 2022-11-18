@@ -94,7 +94,7 @@ cmus-rpc --no-notifications
 
 ## **License**
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+See [LICENSE](LICENSE).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
