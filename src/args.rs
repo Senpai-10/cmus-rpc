@@ -8,6 +8,13 @@ pub struct Args {
     #[clap(short = 'n', long, value_parser)]
     pub no_notifications: bool,
 
+    /// Kills any old instances of this program
+    ///
+    /// same as:
+    ///     killall cmus-rpc && cmus-rpc
+    #[clap(short, long, value_parser)]
+    pub kill_old: bool,
+
     #[clap(short, long, value_parser)]
     pub debug: bool,
 
