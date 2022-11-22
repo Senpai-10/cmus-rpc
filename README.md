@@ -34,15 +34,7 @@
           <a href="#installation">Installation</a>
             <ul>
               <li><a href="#download-from-releases">Download from releases</a></li>
-              <li>
-                <a href="#build-from-source">Build from source</a>
-                <ul>
-                  <li><a href="#1-git-clone">1. git clone</a></li>
-                  <li><a href="#1-2-cd-the-cloned-repository">1.2 cd the cloned repository</a></li>
-                  <li><a href="#2-install">2. install</a></li>
-                  <li><a href="#uninstall">uninstall</a></li>
-                </ul>
-              </li>
+              <li><a href="#build-from-source">Build from source</a></li>
             </ul>
         </li>
       </ul>
