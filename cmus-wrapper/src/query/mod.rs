@@ -1,5 +1,6 @@
 use crate::shell;
 
+use std::env;
 use std::collections::HashMap;
 
 #[derive(Eq, PartialEq, Hash)]
