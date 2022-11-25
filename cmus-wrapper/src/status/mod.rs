@@ -76,18 +76,15 @@ impl Status {
         }
     }
 
-    pub fn query_status(&mut self) -> () {
-        loop {
-            if let Some(remote) = shell::get_stdout("cmus-remote", "-Q") {
-                if !remote.is_empty() {
-                    self.output = remote;
-                    break;
-                }
+    pub fn query_status(&mut self) -> bool {
+        if let Some(remote) = shell::get_stdout("cmus-remote", "-Q") {
+            if !remote.is_empty() {
+                self.output = remote;
+                return true
             }
-
-            println!("cmus is not running!");
-            thread::sleep(Duration::from_secs(15));
         }
+
+        return false
     }
 
     pub fn get(&self, q: Query) -> Option<String> {
