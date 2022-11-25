@@ -1,50 +1,51 @@
 use crate::args::Args;
-use cmus_wrapper::query;
+use cmus_wrapper::status;
 use discord_rpc_client::Client;
 use notify_rust::Notification;
-use query::Query;
+use status::Query;
 use std::path;
 use std::process::Command;
-use std::{collections::HashMap, thread, time::Duration};
+use std::{thread, time::Duration};
 
 pub fn app(args: Args, mut rpc: Client) -> () {
     let mut current_song = String::new();
-    let mut query_map: query::QueryMap = HashMap::new();
+    let mut status = status::Status::new();
 
     loop {
-        if query::load(&mut query_map) == false {
-            println!("cmus is not running!");
-            if !args.debug {
-                rpc.clear_activity().expect("Failed to clear activity");
-            }
-            thread::sleep(Duration::from_secs(3));
+        if !args.debug {
+            rpc.clear_activity().expect("Failed to clear activity");
+        }
+
+        if status.query_status() == false {
+            println!("cmus is not running");
+            thread::sleep(Duration::from_secs(15));
             continue;
         }
 
-        let song_status: String = query_map
-            .get(&Query::Status)
-            .unwrap_or(&String::new())
+        let song_status: String = status
+            .get(Query::Status)
+            .unwrap_or(String::new())
             .to_owned();
 
         if song_status == "playing" {
-            let title: String = query_map
-                .get(&Query::Title)
-                .unwrap_or(&String::from("Unknown title"))
+            let title: String = status
+                .get(Query::Title)
+                .unwrap_or(String::from("Unknown title"))
                 .to_owned();
-            let artist: String = query_map
-                .get(&Query::Artist)
-                .unwrap_or(&String::from("Unknown artist"))
+            let artist: String = status
+                .get(Query::Artist)
+                .unwrap_or(String::from("Unknown artist"))
                 .to_owned();
-            let time_left: String = query_map
-                .get(&Query::TimeLeft)
-                .unwrap_or(&String::new())
+            let time_left: String = status
+                .get(Query::TimeLeft)
+                .unwrap_or(String::new())
                 .to_owned();
 
             if title != current_song {
                 if !args.no_notifications {
-                    let file: &String = query_map.get(&Query::File).unwrap();
+                    let file: String = status.get(Query::File).unwrap();
 
-                    let song_cover = get_song_cover(file);
+                    let song_cover = get_song_cover(&file);
 
                     let mut notify = Notification::new();
                     notify.summary("Now playing!");
