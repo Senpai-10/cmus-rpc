@@ -12,13 +12,12 @@ pub fn app(args: Args, mut rpc: Client) -> () {
     let mut status = status::Status::new();
 
     loop {
-        if !args.debug {
-            rpc.clear_activity().expect("Failed to clear activity");
-        }
 
         if status.query_status() == false {
             if args.debug {
                 println!("cmus is not running");
+            } else {
+                rpc.clear_activity().expect("Failed to clear activity");
             }
 
             thread::sleep(Duration::from_secs(15));
