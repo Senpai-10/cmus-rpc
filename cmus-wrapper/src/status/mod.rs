@@ -6,13 +6,13 @@ use std::time::Duration;
 #[derive(Eq, PartialEq, Hash)]
 pub enum Query {
     Status,
-    // StatusSymbol,
+    StatusSymbol,
     File,
     Duration,
     Position,
-    // FormattedDuration,
-    // FormattedPosition,
-    // TimeLeft,
+    FormattedDuration,
+    FormattedPosition,
+    TimeLeft,
     Artist,
     Album,
     Title,
@@ -56,6 +56,11 @@ impl std::fmt::Display for Query {
             Query::Softvol => write!(f, "set softvol"),
             Query::VolLeft => write!(f, "set vol_left"),
             Query::VolRight => write!(f, "set vol_right"),
+
+            Query::StatusSymbol => write!(f, ""),
+            Query::FormattedDuration => write!(f, ""),
+            Query::FormattedPosition => write!(f, ""),
+            Query::TimeLeft => write!(f, ""),
         }
     }
 }
@@ -86,8 +91,83 @@ impl Status {
     }
 
     pub fn get(&self, q: Query) -> Option<String> {
+        if q == Query::StatusSymbol {
+            return match self.get(Query::Status) {
+                Some(status) => match status.as_str() {
+                    "playing" => Some(String::from(">")),
+                    "paused" => Some(String::from("||")),
+                    "stopped" => Some(String::from(".")),
+                    _ => Some(String::from("?")),
+                },
+                None => Some(String::from("?")),
+            };
+        } else if q == Query::FormattedDuration {
+            let duration = self.get(Query::Duration);
+
+            if duration.is_some() {
+                let duration: u64 = duration.unwrap().parse().unwrap();
+
+                return Some(format_time(duration, true));
+            } else {
+                return Some(String::from("0"));
+            }
+        } else if q == Query::FormattedPosition {
+            let position = self.get(Query::Position);
+
+            if position.is_some() {
+                let position: u64 = position.unwrap().parse().unwrap();
+
+                return Some(format_time(position, true));
+            } else {
+                return Some(String::from("0"));
+            }
+        } else if q == Query::TimeLeft {
+            let duration = self.get(Query::Duration);
+            let position = self.get(Query::Position);
+
+            if duration.is_some() && position.is_some() {
+                let duration: u64 = duration.unwrap().parse().unwrap();
+                let position: u64 = position.unwrap().parse().unwrap();
+
+                return Some(format_time(duration - position, true));
+            }
+        }
+
         let re = Regex::new(&format!("(?m)^{} (.+)$", q.to_string())).unwrap();
 
         Some(re.captures(&self.output)?.get(1)?.as_str().to_string())
     }
+}
+
+fn pad(number: u64) -> String {
+    if number < 10 && number != 0 {
+        return format!("0{number}");
+    }
+
+    return number.to_string();
+}
+
+fn format_time(time: u64, clean: bool) -> String {
+    let seconds = time % 60;
+    let minutes = (time / 60) % 60;
+    let hours = (time / 60) / 60;
+
+    let mut format = String::new();
+
+    if clean {
+        if hours != 0 {
+            format.push_str(&format!("{}:", pad(hours)));
+        }
+        if minutes != 0 {
+            format.push_str(&format!("{}:", pad(minutes)));
+        }
+
+        format.push_str(&format!("{}", pad(seconds)));
+
+        return format;
+    }
+
+    format = format!("{}:{}:{}", pad(hours), pad(minutes), pad(seconds));
+
+    return format;
 }
