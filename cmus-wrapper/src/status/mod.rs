@@ -1,7 +1,5 @@
 use crate::shell;
 use regex::Regex;
-use std::thread;
-use std::time::Duration;
 
 #[derive(Eq, PartialEq, Hash)]
 pub enum Query {
