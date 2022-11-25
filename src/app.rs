@@ -17,7 +17,10 @@ pub fn app(args: Args, mut rpc: Client) -> () {
         }
 
         if status.query_status() == false {
-            println!("cmus is not running");
+            if args.debug {
+                println!("cmus is not running");
+            }
+
             thread::sleep(Duration::from_secs(15));
             continue;
         }
@@ -61,7 +64,9 @@ pub fn app(args: Args, mut rpc: Client) -> () {
 
             current_song = title.clone();
 
-            println!("{} - {} (-{})", title, artist, time_left);
+            if args.verbose {
+                println!("{} - {} (-{})", title, artist, time_left);
+            }
 
             if !args.debug {
                 rpc.set_activity(|activity| {

@@ -16,6 +16,9 @@ pub struct Args {
     pub kill_old: bool,
 
     #[clap(short, long, value_parser)]
+    pub verbose: bool,
+
+    #[clap(short, long, value_parser)]
     pub debug: bool,
 
     // From https://github.com/pascalpuffke/cmusrp-rust/blob/main/src/main.rs#L19-L25
