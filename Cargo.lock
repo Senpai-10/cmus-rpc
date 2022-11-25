@@ -244,6 +244,9 @@ dependencies = [
 [[package]]
 name = "cmus-wrapper"
 version = "0.1.0"
+dependencies = [
+ "regex",
+]
 
 [[package]]
 name = "concurrent-queue"
