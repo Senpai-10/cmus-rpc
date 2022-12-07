@@ -51,7 +51,7 @@ pub fn app(args: Args, mut rpc: Client) -> () {
 
                     let mut notify = Notification::new();
                     notify.summary("Now playing!");
-                    notify.body(&format!("{} - {}", title, artist));
+                    notify.body(&format!("{} - {}", artist, title));
                     notify.urgency(notify_rust::Urgency::Low);
                     if let Some(cover_path) = song_cover {
                         notify.icon(&cover_path);
