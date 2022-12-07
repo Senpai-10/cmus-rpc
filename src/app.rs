@@ -68,6 +68,9 @@ pub fn app(args: Args, mut rpc: Client) -> () {
             }
 
             if !args.debug {
+                // FIX:
+                //  When you don't have internet connecion
+                //  program hangs here!
                 rpc.set_activity(|activity| {
                     activity
                         .details(format!("{}", title))
